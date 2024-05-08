@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../aloritmos ejercicios"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"iostream": "cpp",
+			"ostream": "cpp"
+		}
+	}
+}
