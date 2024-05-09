@@ -31,3 +31,16 @@ esCapicua palabra = ( (== concat(palabra)) . reverse . concat) palabra
 duracionLlamadas = (("horarioReducido",[20,10,25,15]),("horarioNormal",[10,5,8,2,9,10]))
 mejoresNotas notas = map maximum notas
 aprobo notas = (not . elem False . map(> 5)) notas
+
+--guia 4
+mapa :: (a -> b) -> [a] -> [b]
+mapa funcion [] = []
+mapa funcion (x:xs) = funcion x : mapa funcion xs
+
+sacar :: Int -> [a] -> [a]
+sacar 0 (x:xs) = (x:xs)
+sacar n (x:xs) = sacar (n-1) xs
+
+alguno :: (a -> Bool) -> [a] -> Bool
+alguno funcion [] = False
+alguno funcion (x:xs) = (funcion x) || (alguno funcion xs)
