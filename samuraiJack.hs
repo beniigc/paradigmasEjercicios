@@ -29,6 +29,14 @@ personaje1 = UnPersonaje{
     anioPresente = 1970
 }
 
+personaje2 = UnPersonaje{
+    nombre = "Katarina",
+    salud = 50.0,
+    elementos = [soporte],
+    anioPresente = 1970
+}
+
+
 malefico = UnElemento{
     tipo = "maldad",
     ataque = causarDanio 1.0,
@@ -41,7 +49,7 @@ soporte = UnElemento{
     defensa = meditar 40
 }
 --1
-
+--Esta funcion devuelve "<function>" nose porque
 mandarAlAnio :: Personaje -> Int -> Personaje
 mandarAlAnio (UnPersonaje nombre salud elementos _) anio = UnPersonaje nombre salud elementos anio
 
@@ -54,8 +62,20 @@ causarDanio danio personaje
     | otherwise     = personaje {salud = salud personaje - danio}
 
 --2
-{-darElementoDePersonaje :: Personaje -> String
-darElementoDePersonaje personaje = (tipo.head.elementos)personaje -}
+darListaTipos :: [Elemento] -> [String]
+darListaTipos elementos = map tipo elementos
+esMalvado :: Personaje -> Bool
+esMalvado (UnPersonaje _ _ elementos _) = (any ("maldad" ==) . darListaTipos) elementos
 
---esMalvado :: Personaje -> Bool
---esMalvado (Personaje {Elemento tipo _ _}) = tipo == "Maldad"
+danioQueProduce :: Personaje -> Elemento -> Float
+danioQueProduce personaje elemento = (salud . ataque elemento) personaje
+
+enemigosMortales :: Personaje -> [Personaje] -> [Personaje]
+enemigosMortales personaje listaDePersonajes = filter (puedeMatarlo personaje) listaDePersonajes
+
+puedeMatarlo :: Personaje -> Personaje -> Bool
+puedeMatarlo personaje1 personaje2 = (any (ataqueMortal personaje1) . elementos) personaje2
+
+ataqueMortal :: Personaje -> Elemento -> Bool
+ataqueMortal personaje elemento = 
+    danioQueProduce personaje elemento == salud personaje
