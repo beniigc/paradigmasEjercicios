@@ -102,3 +102,5 @@ menorCantidadViajes :: Chofer -> Chofer -> Chofer
 menorCantidadViajes chofer1 chofer2
     | cantidadDeViajes chofer1 > cantidadDeViajes chofer2 = chofer2
     | otherwise = chofer1
+
+--s
