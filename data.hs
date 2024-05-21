@@ -28,3 +28,4 @@ victini = Pokemon "Victini" "Pokemon Peronista" (Doble Fuego Psiquico)
 
 familia' :: Pokemon -> String
 familia' (Pokemon _ unaFamilia _) = unaFamilia
+
