@@ -5,8 +5,8 @@ data Chofer = UnChofer {
     nombreChofer :: String,
     kilometraje :: Float,
     viajesTomados :: [Viaje],
-    condicion :: (Viaje -> Bool)
-} deriving(Show)
+    condicion :: Condicion
+} deriving (Show)
 
 data Viaje = UnViaje {
     fechaViaje :: String,
@@ -23,7 +23,24 @@ choferPedro = UnChofer {
     nombreChofer = "Pedro",
     kilometraje = 145,
     viajesTomados = [belgrano, cordoba],
-    condicion = (condicionPrecio)
+    condicion = (Precio)
+}
+
+choferDaniel = UnChofer {
+    nombreChofer = "Daniel",
+    kilometraje = 23500,
+    viajesTomados = [viajeLucas],
+    condicion = (Domicilio "Olivos")
+}
+
+clienteJuan = UnCliente{
+    nombreCliente = "Juan",
+    domicilioCliente = "Sarmiento"
+}
+
+clienteLucas = UnCliente{
+    nombreCliente = "Lucas",
+    domicilioCliente = "Victoria"
 }
 
 belgrano = UnViaje {
@@ -38,27 +55,50 @@ cordoba = UnViaje {
     clienteDelViaje = clienteJuan
 }
 
-clienteJuan = UnCliente{
-    nombreCliente = "Juan",
-    domicilioCliente = "Sarmiento"
+viajeLucas = UnViaje {
+    fechaViaje = "20/04/2017",
+    costo = 150,
+    clienteDelViaje = clienteLucas
 }
 
+choferAlejandra = UnChofer {
+    nombreChofer = "Alejandra",
+    kilometraje = 180000,
+    viajesTomados = [], 
+    condicion = (CualquierViaje)
+}
 
-
-data Condicion = LongitudNombreCliente Int | Domicilio String | precio
+data Condicion = LongitudNombreCliente Int | Domicilio String | Precio | CualquierViaje
 aplicarCondicion :: Viaje -> Condicion -> Bool
 aplicarCondicion (UnViaje _ _ cliente) (LongitudNombreCliente n) = ((n<) . length . nombreCliente) cliente
 aplicarCondicion viaje (Domicilio domicilio) = domicilio /= (domicilioCliente . clienteDelViaje) viaje
-aplicarCondicion (UnViaje _ precio _) = precio > 200
+aplicarCondicion (UnViaje _ precio _) Precio= precio > 200
+aplicarCondicion _ CualquierViaje = True
 
-{-}
+-- 4
+tomarViaje :: Viaje -> Chofer -> Bool
+tomarViaje viaje (UnChofer _ _ _ condicionParaViaje) = aplicarCondicion viaje condicionParaViaje
 
-condicionPrecio :: Condicion
-condicionPrecio (UnViaje _ precio _) = precio > 200
+-- 5
+liquidacionChofer :: Chofer -> Float
+liquidacionChofer (UnChofer _ _ viajes _) = sum (map costo viajes)
 
---se tiene que aplicar parcialmente cuando declaremos la condicion de un nuevo chofer debido a que recibe un int ademas del viaje
-condicionNombreCliente :: Int -> Condicion
-condicionNombreCliente n (UnViaje _ _ cliente) = ((n<) . length . nombreCliente) cliente
+-- 6
+-- a
+filtrarChoferesParaViaje :: Viaje -> [Chofer] -> [Chofer]
+filtrarChoferesParaViaje viaje listaChoferes = filter (tomarViaje viaje) listaChoferes
+mostrarChoferesHabilitadosParaViaje :: Viaje -> [Chofer] -> [String]
+mostrarChoferesHabilitadosParaViaje viaje choferes = map nombreChofer (filtrarChoferesParaViaje viaje choferes)
 
-condicionDomicilio :: String -> Condicion
-condicionDomicilio domicilio viaje = domicilio /= (domicilioCliente . clienteDelViaje) viaje
+-- b
+choferConMenosViajes :: [Chofer] -> Chofer
+choferConMenosViajes (chofer1 : _) = chofer1
+choferConMenosViajes (chofer1 : chofer2 : resto) = choferConMenosViajes (menorCantidadViajes chofer1 chofer2 : resto)
+
+cantidadDeViajes :: Chofer -> Int
+cantidadDeViajes chofer = (length . viajesTomados) chofer 
+
+menorCantidadViajes :: Chofer -> Chofer -> Chofer
+menorCantidadViajes chofer1 chofer2
+    | cantidadDeViajes chofer1 > cantidadDeViajes chofer2 = chofer2
+    | otherwise = chofer1
