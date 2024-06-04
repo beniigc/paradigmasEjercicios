@@ -103,13 +103,16 @@ quickSort _ [] = []
 quickSort criterio (x:xs) = (quickSort criterio . filter (not . criterio x)) xs ++ [x] ++ (quickSort criterio . filter (criterio x)) xs
 
     
-{-
---completar esta funcion
+
 
 --punto 6
 campeonTorneo :: [Equipo] -> Equipo
-campeonTorneo ([] : equipo) = equipo
-campeonTorneo (equipo1 : equipo2 : equipos) = campeonTorneo ((ganador equipo1 equipo2) : equipos)
+campeonTorneo (equipo1 : _) = equipo1
+campeonTorneo (equipo1 : equipo2 : equipos) = campeonTorneo ((equipoGanador equipo1 equipo2) : equipos)
 
 --punto 7
--}
+
+elGroso :: [Equipo] -> Maybe Jugador
+elGroso equipos = (find esFigura) . listaJugadores . campeonTorneo $ equipos
+
+--punto 
