@@ -22,8 +22,8 @@ prestarleAlPais monto pais =  pais {deuda = 1.50 * monto}
 
 reducirPuestos :: Float -> Pais -> Pais
 reducirPuestos puestosReducidos pais = pais{
-    ingresoPerCapita = ingresoPerCapita * (porcentajeADisminuir puestosReducidos),
-    poblacionActivaPublico = poblacionActivaPublico - puestosReducidos
+    ingresoPerCapita = ingresoPerCapita pais * (porcentajeADisminuir puestosReducidos),
+    poblacionActivaPublico = poblacionActivaPublico pais - puestosReducidos
 }
 
 porcentajeADisminuir :: Float -> Float
@@ -34,10 +34,10 @@ porcentajeADisminuir puestos
 type Empresa = String
 
 darRecursoAEmpresa :: Empresa -> String -> Pais -> Pais
-darRecursoAEmpresa _ recurso pais = pais {recursos = filter (== recurso) recursos}
+darRecursoAEmpresa _ recurso pais = pais {recursos = filter (== recurso) (recursos pais)}
 
 blindaje :: Pais -> Pais
-blindaje pais = reducirPuestos 500 . prestarleAlPais . (/2) . (productoBruto) $ pais
+blindaje pais = reducirPuestos 500 . (flip prestarleAlPais pais) . (/2) . (productoBruto) $ pais
 
 productoBruto :: Pais -> Float
 productoBruto pais = ingresoPerCapita pais * poblacionActivaTotal pais
@@ -53,7 +53,7 @@ receta1 :: Receta
 receta1 = [prestarleMillones 200 , darRecursoAEmpresa "X" "Mineria"]
 
 --b
-aplicarEstrategia :: (Pais -> Pais)
+aplicarEstrategia :: (Pais -> Pais) -> Pais -> Pais
 aplicarEstrategia estrategia pais = estrategia pais
 
 aplicarReceta :: Receta -> Pais -> Pais
@@ -65,11 +65,12 @@ aplicarReceta receta pais = foldr aplicarEstrategia pais receta
 puedeZafar :: [Pais] -> [Pais]
 puedeZafar paises = filter (any ( == "Petroleo") . recursos) paises
 
-deudaAcumulada = sum . map deuda $ paises
+deudaAcumulada :: [Pais] -> Float
+deudaAcumulada paises = sum . map deuda $ paises
 
 --5 
 ordenada :: Receta -> [Pais] -> Bool
 ordenada receta [pais] = True
-ordenada receta [pais1:pais2:paises] = productoBruto . aplicarReceta  pais1 < productoBruto . aplicarReceta  pais2 && ordenada receta (pais2:paises)
+ordenada receta (pais1:pais2:paises) = productoBruto . (aplicarReceta receta) pais1 < productoBruto . (aplicarReceta  receta) pais2 && ordenada receta (pais2:paises)
 
 
