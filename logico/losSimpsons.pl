@@ -23,3 +23,29 @@ madreDe(selma, ling).
 
 tieneHijo(Padre):-
     padreDe(Padre, _).
+
+medioHermanos(Hijo1, Hijo2):-
+    madreDe(Madre , Hijo1),
+    madreDe(Madre, Hijo2),
+    Madre = Madre.
+
+medioHermanos(Hijo1, Hijo2):-
+    padreDe(Padre , Hijo1),
+    padreDe(Padre, Hijo2),
+    Padre = Padre.
+
+hermanos(Hijo1, Hijo2):-
+    padreDe(Padre , Hijo1),
+    padreDe(Padre, Hijo2),
+    Padre = Padre,
+    madreDe(Madre , Hijo1),
+    madreDe(Madre, Hijo2),
+    Madre = Madre.
+
+tioDe(Tio, Sobrino):-
+    madreDe(Madre, Sobrino),
+    hermanos(Madre, Tio).
+
+tioDe(Tio, Sobrino):-
+    padreDe(Padre, Sobrino),
+    hermanos(Padre, Tio).
