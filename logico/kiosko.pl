@@ -32,13 +32,47 @@ quienAtiende(Dia, Hora, Nombre):-
 %%%%%%%%%%
 %%punto3%%
 %%%%%%%%%%
-
-foreverAlone(Persona,Dia,Horario):-
-    atiende(Persona,Dia,_,_),
-    atiende(OtraPersona,Dia,_,_),
-    Persona \= OtraPersona,
+/* 
+foreverAlone(Dia,Horario,Persona):-
+    atiende(Persona,_,_,_),
+    atiende(OtraPersona,_,_,_),
     quienAtiende(Dia,Horario,Persona),
-    not(quienAtiende(Dia,Horario,OtraPersona)).
+    not(quienAtiende(Dia,Horario,OtraPersona)),
+    Persona \= OtraPersona. 
+Esta solucion estaba bien pero quedaba mas corta y mejor la de abajo, en donde dentro de la consulta de quienAtiene con OtraPersona ya le
+aclaramos que OtraPersona es distinta a Persona, dentro del not
+*/
 
+foreverAlone(Persona, Dia, HorarioPuntual):-
+  quienAtiende(Persona, Dia, HorarioPuntual),
+  not((quienAtiende(OtraPersona, Dia, HorarioPuntual), Persona \= OtraPersona)).
 
+%%%%%%%%%%
+%%punto4%%
+%%%%%%%%%%
+
+posibilidadesDeAtencion(Dia, Atendedores):-
+    atiende(Persona, Dia, _, _),
+    findall(Persona, quienAtiende(Dia,_, Persona), Atendedores).
+
+%% Este punto era raro
+
+%%%%%%%%%%
+%%punto5%%
+%%%%%%%%%%
+
+%% venta(nombre,dia,mes,venta).
+venta(dodain, 10, agosto, golosina(1200)).
+venta(dodain, 10, agosto, cigarrillos(jockey)).
+venta(dodain, 10, agosto, golosina(50)).
+venta(dodain, 12, agosto, bebida(alcholicas,8)).
+venta(dodain, 12, agosto, bebida(noAlcholicas,1)).
+venta(dodain, 12, agosto, golosina(10)).
+venta(martu, 12, agosto, golosina(1000)).
+venta(martu, 12, agosto, cigarrillos(chesterfield)).
+venta(martu, 12, agosto, cigarrillos(colorado)).
+venta(martu, 12, agosto, cigarrillos(parisiennes)).
+venta(lucas, 11, agosto, golosina(600)).
+venta(lucas, 18, agosto, bebida(noAlcholicas,2)).
+venta(lucas, 18, agosto, cigarrillos(derby)).
 
