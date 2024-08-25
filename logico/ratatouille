@@ -1,0 +1,40 @@
+rata(remy, gusteaus).
+rata(emile, bar).
+rata(django, pizzeria).
+
+cocina(linguini, ratatouille, 3).
+cocina(linguini, sopa, 5).
+cocina(colette, salmonAsado, 9).
+cocina(horst, ensaladaRusa, 8).
+
+restaurante(cafeDes2Moulins).
+restaurante(cafeDes2Moulins).
+
+trabajaEn(gusteaus, linguini).
+trabajaEn(gusteaus, colette).
+trabajaEn(gusteaus, skinner).
+trabajaEn(gusteaus, horst).
+trabajaEn(cafeDes2Moulins, amelie).
+
+%%%% 1 %%%%
+inspeccionSatisfactoria(Restaurante):-
+    restaurante(Restaurante),
+    not(rata(_, Restaurante)).
+
+%%%% 2 %%%%
+chef(Empleado, Restaurante) :-
+    trabajaEn(Restaurante, Empleado),
+    cocina(Empleado, _, _).
+
+%%%% 3 %%%%
+chefsito(Rata):-
+    rata(Rata, Restaurante),
+    trabajaEn(Restaurante, linguini).
+
+cocinaBien(Cocinero, Plato):-
+    cocina(Cocinero, Plato, Numero),
+    Numero > 7.
+
+cocinaBien(remy,Plato):-
+    cocina(_,Plato,_).
+
