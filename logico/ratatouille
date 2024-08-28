@@ -16,6 +16,10 @@ trabajaEn(gusteaus, skinner).
 trabajaEn(gusteaus, horst).
 trabajaEn(cafeDes2Moulins, amelie).
 
+plato(ensaladaRusa, entrada([papa, zanahoria, arvejas, huevo, mayonesa])).
+plato(bifeDeChorizo, principal(pure, 25)).
+plato(frutillasConCrema, postre(265)).
+
 %%%% 1 %%%%
 inspeccionSatisfactoria(Restaurante):-
     restaurante(Restaurante),
@@ -31,6 +35,7 @@ chefsito(Rata):-
     rata(Rata, Restaurante),
     trabajaEn(Restaurante, linguini).
 
+%%% 4 %%%%
 cocinaBien(Cocinero, Plato):-
     cocina(Cocinero, Plato, Numero),
     Numero > 7.
@@ -38,3 +43,38 @@ cocinaBien(Cocinero, Plato):-
 cocinaBien(remy,Plato):-
     cocina(_,Plato,_).
 
+%%%% 5 %%%%
+encargadoDe(Cocinero, Plato, Restaurante):-
+    trabajaEn(Restaurante, Cocinero),
+    cocina(Cocinero, Plato, Experiencia1),
+    forall(cocina(_, Plato, Experiencia2), Experiencia1 >= Experiencia2).
+
+%%%% 6 %%%%
+cantidadDeCalorias(Plato, Cantidad):-
+    plato(Plato, entrada(ListaDeIngredientes)),
+    length(ListaDeIngredientes, CantidadDeIngredientes),
+    Cantidad = CantidadDeIngredientes * 15.
+
+cantidadDeCalorias(Plato, Cantidad):-
+    plato(Plato, principal(Guranicion, MinutosDeCoccion)),
+    Cantidad is MinutosDeCoccion * 5
+    sumarGuarnicion(Guarnicion, Cantidad).
+
+cantidadDeCalorias(Plato, Cantidad):-
+    plato(Plato, postre(Cantidad)).
+
+sumarGuarnicion(papaFritas, Cantidad):-
+    Cantidad is Cantidad + 50.
+
+sumarGuarnicion(pure, Cantidad):-
+    Cantidad is Cantidad + 20.
+    
+sumarGuarnicion(_, Cantidad).
+
+saludable(Plato):-
+    cantidadDeCalorias(Plato, Cantidad),
+    Cantidad < 75.
+
+saludable(Plato) :-
+    plato(Plato, postre(_,_)),
+    
