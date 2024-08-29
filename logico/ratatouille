@@ -77,4 +77,17 @@ saludable(Plato):-
 
 saludable(Plato) :-
     plato(Plato, postre(_,_)),
+    grupo(Plato).
+
+grupo(ensalada).
+
+criticaPositiva(Restaurante, antonEgo):-
+    inspeccionSatisfactoria(Restaurante),
+    especialista(Restaurante, ratatouille).
+
+criticaPositiva(Restaurante, christophe):-
+    inspeccionSatisfactoria(Restaurante),
+    cantidadMinimaDeChefs(Restaurante, 3).
+
+criticaPositiva(Restaurante, cormillot):-
     
